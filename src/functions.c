@@ -4,7 +4,9 @@
 #include "functions.h"
 
 char *usage_msg =
-        "Usage:\n"
+        "Usage: rtime [--port <port> | --version | --help ]\n"
+        "\t--port <port>    Capture traffic only for tcp/<port>.\n"
+        "\n"
         "\t--help           Shows program information and usage.\n"
         "\t--version        Shows version information.\n"
         "\n"

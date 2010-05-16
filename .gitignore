@@ -30,6 +30,7 @@ configure.scan
 libtool
 stamp-h1
 config.h
+config.h*
 compile
 install-sh
 missing
