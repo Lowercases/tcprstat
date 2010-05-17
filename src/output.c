@@ -94,6 +94,10 @@ output(char format[]) {
                 c ++;
                 fputc('\t', stdout);
             }
+            else if (c[1] == 'r') {
+                c ++;
+                fputc('\r', stdout);
+            }
             else if (c[1] == '\\') {
                 c ++;
                 fputc('\\', stdout);
@@ -104,6 +108,8 @@ output(char format[]) {
         else
             fputc(c[0], stdout);
         
+    fflush(stdout);
+    
     free_results(results);
     
     return 0;
@@ -134,7 +140,8 @@ check_format(char format[]) {
                 
             }
             
-            if (c[0] != 'n' && c[0] != 'a' && (c[0] != '%' || r != -1))
+            if (c[0] != 'n' && c[0] != 'a' && c[0] != 'r' &&
+                    (c[0] != '%' || r != -1))
                 return 0;
             
         }
