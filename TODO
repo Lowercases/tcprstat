@@ -1,3 +1,5 @@
 * Accept time units for the interval, like "10m", "1h".
 * Percentiles
 * Statically linked binary
+* Header
+*  --interval defaults to 10 --iterations defaults to 1, 0 == infinity
