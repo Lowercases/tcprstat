@@ -32,7 +32,7 @@ char *usage_msg =
     "\t                     Output format. Argument is a string detailing\n"
     "\t                     how the information is presented. Accepted codes:\n"
     "\t                         %n - Response time count\n"
-    "\t                         %a - Response time media in milliseconds\n"
+    "\t                         %a - Response time media in microseconds\n"
     "\t                         %% - A literal %\n"
     "\t                     Default is \"" DEFAULT_OUTPUT_FORMAT "\".\n"
     "\t--interval <seconds>, -t\n"
@@ -41,7 +41,7 @@ char *usage_msg =
     "\n"
     "\t--help               Shows program information and usage.\n"
     "\t--version            Shows version information.\n"
-        "\n"
+    "\n"
 ;
 
 int
