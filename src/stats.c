@@ -48,7 +48,7 @@ struct session {
     
 } session_list;
 
-long *stats;
+unsigned long *stats;
 unsigned statscount, statssz;
 
 pthread_mutex_t sessions_mutex = PTHREAD_MUTEX_INITIALIZER,
@@ -202,31 +202,6 @@ outbound(struct in_addr laddr, struct in_addr raddr,
     
 }
 
-int
-get_flush_stats(unsigned *count, long *average) {
-    long avg = 0;
-    unsigned i;
-    
-    lock_stats();
-    
-    *count = statscount;
-    
-    for (i = 0; i < statscount; i ++)
-        avg += stats[i];
-    
-    avg /= statscount;
-    
-    // Flush
-    statscount = 0;
-    
-    unlock_stats();
-    
-    *average = avg;
-    
-    return 0;
-    
-}
-
 static int
 lock_stats(void) {
     return pthread_mutex_lock(&stats_mutex);
@@ -291,3 +266,67 @@ clean_thread(void *arg) {
     return NULL;
     
 }
+
+/*** Results ***/
+struct stats_results {
+    unsigned long *stats;
+    unsigned statscount, statssz;
+    
+};
+
+struct stats_results *
+get_flush_stats(void) {
+    struct stats_results *ret;
+    
+    ret = malloc(sizeof(struct stats_results));
+    if (!ret)
+        abort();
+    memset(ret, 0, sizeof(struct stats_results));
+    
+    lock_stats();
+    
+    ret->stats = stats;
+    ret->statscount = statscount;
+    ret->statssz = statssz;
+    
+    stats = malloc((statssz = INITIAL_STAT_SZ) * sizeof(long));
+    if (!stats)
+        abort();
+    statscount = 0;
+    
+    unlock_stats();
+    
+    return ret;
+    
+}
+
+int
+free_results(struct stats_results *results) {
+    free(results->stats);
+    free(results);
+    
+    return 0;
+    
+}
+
+unsigned
+stats_count(struct stats_results *results, int percentile) {
+    return results->statscount;
+    
+}
+
+unsigned long
+stats_avg(struct stats_results *results, int percentile) {
+    unsigned long avg = 0;
+    unsigned i;
+    
+    for (i = 0; i < results->statscount; i ++)
+        avg += results->stats[i];
+    
+    avg /= results->statscount;
+    
+    return avg;
+    
+}
+
+

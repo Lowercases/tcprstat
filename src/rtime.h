@@ -22,6 +22,10 @@
 #if !defined(RTIME_H)
 #define RTIME_H
 
+#define DEFAULT_OUTPUT_FORMAT "%n %a\\n"
+#define DEFAULT_OUTPUT_INTERVAL 3
+#define MAX_OUTPUT_INTERVAL 60 * 60 * 24
+
 extern int port;
 
 void terminate(int signal);

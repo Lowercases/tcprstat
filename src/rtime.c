@@ -30,6 +30,7 @@
 #include "functions.h"
 #include "local-addresses.h"
 #include "capture.h"
+#include "output.h"
 #include "stats.h"
 
 struct option long_options[] = {
@@ -37,26 +38,30 @@ struct option long_options[] = {
     { "version", no_argument, NULL, 'V' },
     
     { "port", required_argument, NULL, 'p' },
+    { "format", required_argument, NULL, 'f' },
+    { "interval", required_argument, NULL, 't' },
 
     { NULL, 0, NULL, '\0' }
 
 };
-char *short_options = "hVp";
+char *short_options = "hVpf:t:";
 
-pthread_t capture_thread_id;
+pthread_t capture_thread_id, output_thread_id;
 
 // Global options
 int port;
+int interval = 30;
+struct output_options output_options = {
+    DEFAULT_OUTPUT_FORMAT,
+    DEFAULT_OUTPUT_INTERVAL,
+};
 
 int
 main(int argc, char *argv[]) {
     struct sigaction sa;
     char c;
     int option_index = 0;
-    
-    unsigned capturecount;
-    long captureavg;
-
+        
     // Parse command line options
     do {
         c = getopt_long(argc, argv, short_options, long_options, &option_index);
@@ -70,6 +75,25 @@ main(int argc, char *argv[]) {
             port = strtol(optarg, NULL, 0);
             if (port <= 0 || port > 65535) {
                 fprintf(stderr, "Invalid port\n");
+                return EXIT_FAILURE;
+            }
+            
+            break;
+            
+        case 'f':
+            if (!check_format(optarg)) {
+                fprintf(stderr, "Bad format provided: `%s'\n", optarg);
+                return EXIT_FAILURE;
+            }
+            
+            output_options.format = optarg;
+            
+            break;
+            
+        case 't':
+            output_options.interval = strtol(optarg, NULL, 10);
+            if (interval <= 0 || interval >= MAX_OUTPUT_INTERVAL) {
+                fprintf(stderr, "Bad interval provided\n");
                 return EXIT_FAILURE;
             }
             
@@ -113,14 +137,14 @@ main(int argc, char *argv[]) {
     // Fire up capturing thread
     pthread_create(&capture_thread_id, NULL, capture, NULL);
     
-    pthread_join(capture_thread_id, NULL);
+    // Options thread
+    pthread_create(&output_thread_id, NULL, output_thread, &output_options);
     
-    get_flush_stats(&capturecount, &captureavg);
+    pthread_join(capture_thread_id, NULL);
+    pthread_kill(output_thread_id, SIGINT);
     
     free_stats();
     free_addresses();
-    
-    printf("Count: %d, avg: %ld\n", capturecount, captureavg);
     
     return EXIT_SUCCESS;
 

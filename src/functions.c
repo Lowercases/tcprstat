@@ -25,11 +25,18 @@
 #include "functions.h"
 
 char *usage_msg =
-        "Usage: rtime [--port <port> | --version | --help ]\n"
-        "\t--port <port>    Capture traffic only for tcp/<port>.\n"
-        "\n"
-        "\t--help           Shows program information and usage.\n"
-        "\t--version        Shows version information.\n"
+    "Usage: rtime [--port <port> | --version | --help ]\n"
+    "\t--port <port>, -p    Capture traffic only for tcp/<port>.\n"
+    "\t--format <format>, -f\n"
+    "\t                     Output format. Argument is a string detailing\n"
+    "\t                     how the information is presented. Accepted codes:\n"
+    "\t                         %n - Response time count\n"
+    "\t                         %a - Response time media in milliseconds\n"
+    "\t                         %% - A literal %\n"
+    "\t                     Default is \"%n %a\\n\"\n"
+    "\n"
+    "\t--help               Shows program information and usage.\n"
+    "\t--version            Shows version information.\n"
         "\n"
 ;
 
