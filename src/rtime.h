@@ -24,6 +24,7 @@
 
 #define DEFAULT_OUTPUT_FORMAT "%n %a\\n"
 #define DEFAULT_OUTPUT_INTERVAL 3
+#define DEFAULT_OUTPUT_INTERVAL_STR "3"
 #define MAX_OUTPUT_INTERVAL 60 * 60 * 24
 
 extern int port;

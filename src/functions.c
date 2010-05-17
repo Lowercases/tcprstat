@@ -23,6 +23,7 @@
 
 #include "config.h"
 #include "functions.h"
+#include "rtime.h"
 
 char *usage_msg =
     "Usage: rtime [--port <port> | --version | --help ]\n"
@@ -33,7 +34,10 @@ char *usage_msg =
     "\t                         %n - Response time count\n"
     "\t                         %a - Response time media in milliseconds\n"
     "\t                         %% - A literal %\n"
-    "\t                     Default is \"%n %a\\n\"\n"
+    "\t                     Default is \"" DEFAULT_OUTPUT_FORMAT "\".\n"
+    "\t--interval <seconds>, -t\n"
+    "\t                     Output interval. Default is "
+                                    DEFAULT_OUTPUT_INTERVAL_STR ".\n"
     "\n"
     "\t--help               Shows program information and usage.\n"
     "\t--version            Shows version information.\n"
@@ -42,7 +46,7 @@ char *usage_msg =
 
 int
 dump_usage(void) {
-    fprintf(stderr, usage_msg);
+    fprintf(stderr, "%s", usage_msg);
 
     return 0;
 
@@ -51,7 +55,7 @@ dump_usage(void) {
 int
 dump_help(void) {
     dump_version();
-    fprintf(stdout, usage_msg);
+    fprintf(stdout, "%s", usage_msg);
 
     return 0;
 
