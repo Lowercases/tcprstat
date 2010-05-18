@@ -320,6 +320,9 @@ stats_avg(struct stats_results *results, int percentile) {
     unsigned long avg = 0;
     unsigned i;
     
+    if (!results->statscount)
+        return 0;
+
     for (i = 0; i < results->statscount; i ++)
         avg += results->stats[i];
     
