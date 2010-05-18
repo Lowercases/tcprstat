@@ -24,5 +24,11 @@ bin_PROGRAMS = rtime
 rtime_SOURCES = rtime.h rtime.c functions.h functions.c capture.h capture.c \
 	process-packet.h process-packet.c local-addresses.h local-addresses.c \
 	stats.h stats.c output.h output.c
-rtime_LDFLAGS = $(AM_LDFLAGS) -lpcap -lpthread
+if BUILD_PCAP
+rtime_LDFLAGS = $(AM_LDFLAGS) -L$(top_srcdir)/libpcap/libpcap-1.1.1/ \
+	-lpthread
+rtime_LDADD = -lpcap
+else
+rtime_LDFLAGS = $(AM_LDFLAGS) -lpthread -lpcap
+endif
 rtime_CFLAGS = $(AM_CFLAGS) -pthread

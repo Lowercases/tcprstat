@@ -31,8 +31,25 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 
 # Checks for libraries.
-AC_CHECK_LIB([pcap], [pcap_open_live], [ : ],
-    AC_MSG_ERROR([libpcap not found -- please install of specify]))
+
+# Pcap static check
+save_LDFLAGS="$LDFLAGS"
+LDFLAGS=-static
+AC_CHECK_LIB([pcap], [pcap_open_live], , [nostaticpcap=yes])
+LDFLAGS="$save_LDFLAGS"
+
+if test x$nostaticpcap == xyes
+then
+    # Build our shipped version of libpcap.
+    (cd libpcap && tar xzf libpcap*.tar.gz) || {
+        AC_MSG_ERROR([error unpacking libpcap tar])
+    }
+    
+    AC_CONFIG_SUBDIRS([libpcap/libpcap-*/])
+
+fi
+
+AM_CONDITIONAL(BUILD_PCAP, test x$nostaticpcap == xyes)
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -43,4 +60,9 @@ AC_HEADER_STDC
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
+if test x$nostaticpcap == xyes
+then
+    AC_CONFIG_FILES([libpcap/Makefile])
+fi
+
 AC_OUTPUT

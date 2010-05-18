@@ -18,8 +18,11 @@
 #   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-if BUILD_PCAP
-SUBDIRS = libpcap src
-else
-SUBDIRS = src
-endif
+all-local:
+	(cd libpcap-*/ && $(MAKE))
+	
+clean-local:
+	(cd libpcap-*/ && $(MAKE) clean)
+	
+distclean:
+	rm -rf libpcap-*/
