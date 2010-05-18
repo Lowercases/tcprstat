@@ -21,7 +21,7 @@
 #
 
 aclocal &&
-autoheader &&
+#autoheader &&
 #libtoolize --automake &&
 automake --add-missing &&
 autoconf
