@@ -19,10 +19,12 @@
 #
 
 all-local:
-	(cd libpcap-*/ && $(MAKE))
+	(cd libpcap-*/ && $(MAKE) libpcap.a)
 	
 clean-local:
 	(cd libpcap-*/ && $(MAKE) clean)
 	
 distclean:
 	rm -rf libpcap-*/
+
+EXTRA_DIST = libpcap-*.tar.gz
