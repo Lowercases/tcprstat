@@ -20,16 +20,28 @@
 
 AM_CFLAGS = -Wall -Werror -g
 
-bin_PROGRAMS = rtime
+bin_PROGRAMS = rtime rtime-static
 rtime_SOURCES = rtime.h rtime.c functions.h functions.c capture.h capture.c \
 	process-packet.h process-packet.c local-addresses.h local-addresses.c \
 	stats.h stats.c output.h output.c
+rtime_static_SOURCES = $(rtime_SOURCES)
 
 if BUILD_PCAP
 rtime_CFLAGS = $(AM_CFLAGS) -pthread -I$(top_srcdir)/@LIBPCAP_SUBDIR@
 rtime_LDFLAGS = $(AM_LDFLAGS) -L$(top_srcdir)/@LIBPCAP_SUBDIR@ -lpthread
 rtime_LDADD = -lpcap
+
+rtime_static_CFLAGS = $(AM_CFLAGS) -pthread -I$(top_srcdir)/@LIBPCAP_SUBDIR@
+rtime_static_LDFLAGS = $(AM_CFLAGS) -L$(top_srcdir)/@LIBPCAP_SUBDIR@ \
+	-L/usr/lib64 -static
+rtime_static_LDADD = -lpcap -lpthread -lc
+
 else
 rtime_CFLAGS = $(AM_CFLAGS) -pthread
 rtime_LDFLAGS = $(AM_LDFLAGS) -lpthread -lpcap
+
+rtime_static_CFLAGS = $(AM_CFLAGS) -pthread
+rtime_static_LDFLAGS = $(AM_LDFLAGS) -static
+rtime_static_LDADD = -lpthread -lpcap
+
 endif
