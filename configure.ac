@@ -37,10 +37,24 @@ AC_PROG_LEX
 # Pcap static check
 save_LDFLAGS="$LDFLAGS"
 LDFLAGS=-static
-AC_CHECK_LIB([pcap], [pcap_open_live], , [nostaticpcap=yes])
+AC_CHECK_LIB([pcap], [pcap_open_live], , [buildpcap=yes])
 LDFLAGS="$save_LDFLAGS"
 
-if test x$nostaticpcap == xyes
+# Checks for header files.
+AC_CHECK_HEADERS(
+    [arpa/inet.h netinet/in.h stdint.h stdlib.h string.h sys/time.h unistd.h])
+AC_CHECK_HEADER([pcap/sll.h], , [buildpcap=yes])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_TYPE_UINT16_T
+
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_FUNC_REALLOC
+AC_CHECK_FUNCS([gettimeofday inet_ntoa memset strdup strtol])
+
+# Build our version of libpcap
+if test x$buildpcap == xyes
 then
     # We need flex and yacc
     if ! $YACC --version &>/dev/null
@@ -62,28 +76,13 @@ then
     AC_SUBST(LIBPCAP_SUBDIR)
     
     AC_CONFIG_SUBDIRS([libpcap/libpcap-*/])
-
+    AC_CONFIG_FILES([libpcap/Makefile])
+    
 fi
 
-AM_CONDITIONAL(BUILD_PCAP, test x$nostaticpcap == xyes)
-
-# Checks for header files.
-AC_CHECK_HEADERS(
-    [arpa/inet.h netinet/in.h stdint.h stdlib.h string.h sys/time.h unistd.h])
-
-# Checks for typedefs, structures, and compiler characteristics.
-AC_TYPE_UINT16_T
-
-# Checks for library functions.
-AC_FUNC_MALLOC
-AC_FUNC_REALLOC
-AC_CHECK_FUNCS([gettimeofday inet_ntoa memset strdup strtol])
+AM_CONDITIONAL(BUILD_PCAP, test x$buildpcap == xyes)
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
-if test x$nostaticpcap == xyes
-then
-    AC_CONFIG_FILES([libpcap/Makefile])
-fi
 
 AC_OUTPUT
