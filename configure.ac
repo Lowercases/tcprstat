@@ -68,7 +68,8 @@ then
     fi
     
     # Build our shipped version of libpcap.
-    (cd libpcap && tar xzf libpcap*.tar.gz) || {
+    (cd libpcap && tar xzf libpcap*.tar.gz && cd libpcap*/ &&
+        patch -p1 < ../resolver-patch) || {
         AC_MSG_ERROR([error unpacking libpcap tar])
     }
     

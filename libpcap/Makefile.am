@@ -19,7 +19,7 @@
 #
 
 all-local:
-	(cd libpcap-*/ && $(MAKE) libpcap.a)
+	(cd libpcap-*/ && $(MAKE) LDFLAGS=-static libpcap.a)
 	
 clean-local:
 	(cd libpcap-*/ && $(MAKE) clean)
