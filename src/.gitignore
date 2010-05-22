@@ -21,4 +21,5 @@ Makefile
 Makefile.in
 *.o
 rtime
+rtime-static
 .libs
