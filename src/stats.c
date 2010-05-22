@@ -60,7 +60,7 @@ int exiting;
 static void *clean_thread(void *);
 static int lock_sessions(void), unlock_sessions(void),
     lock_stats(void), unlock_stats(void);
-
+    
 int
 init_stats(void) {
     stats = malloc((statssz = INITIAL_STAT_SZ) * sizeof(long));
@@ -272,7 +272,12 @@ struct stats_results {
     unsigned long *stats;
     unsigned statscount, statssz;
     
+    int sorted;
+    
 };
+
+static void sort_results(struct stats_results *results);
+int compare_stats(const void *, const void *);
 
 struct stats_results *
 get_flush_stats(void) {
@@ -289,6 +294,8 @@ get_flush_stats(void) {
     ret->statscount = statscount;
     ret->statssz = statssz;
     
+    ret->sorted = 0;
+    
     stats = malloc((statssz = INITIAL_STAT_SZ) * sizeof(long));
     if (!stats)
         abort();
@@ -297,6 +304,29 @@ get_flush_stats(void) {
     unlock_stats();
     
     return ret;
+    
+}
+
+static void
+sort_results(struct stats_results *results) {
+    qsort(results->stats, results->statscount, sizeof(unsigned long),
+          compare_stats);
+    results->sorted = 1;
+    
+}
+
+int
+compare_stats(const void *void1, const void *void2) {
+    const unsigned long *stat1, *stat2;
+    stat1 = void1;
+    stat2 = void2;
+    
+    if (*stat1 < *stat2)
+        return -1;
+    else if (*stat1 > *stat2)
+        return 1;
+    else
+        return 0;
     
 }
 
@@ -311,22 +341,39 @@ free_results(struct stats_results *results) {
 
 unsigned
 stats_count(struct stats_results *results, int percentile) {
-    return results->statscount;
+    if (percentile == 0 || percentile == 100)
+        return results->statscount;
+    
+    return (results->statscount * percentile) / 100;
     
 }
 
 unsigned long
 stats_avg(struct stats_results *results, int percentile) {
+    unsigned long n;
     unsigned long avg = 0;
     unsigned i;
     
     if (!results->statscount)
         return 0;
 
-    for (i = 0; i < results->statscount; i ++)
+    if (percentile == 0 || percentile == 100)
+        n = results->statscount;
+    else {
+        if (!results->sorted)
+            sort_results(results);
+        
+        n = (results->statscount * percentile ) / 100;
+        
+    }
+    
+    if (!n)
+        return 0;
+    
+    for (i = 0; i < n; i ++)
         avg += results->stats[i];
     
-    avg /= results->statscount;
+    avg /= n;
     
     return avg;
     

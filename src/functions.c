@@ -38,6 +38,8 @@ char *usage_msg =
     "\t                         %T - Unix timestamp\n"
     "\t                         %% - A literal %\n"
     "\t                     Default is \"" DEFAULT_OUTPUT_FORMAT "\".\n"
+    "\t                     %n and %a may contain a percentile number between\n"
+    "\t                     the percentage sign and the code: %99n, %95a.\n"
     "\t--header[=header], --no-header\n"
     "\t                     Whether to output a header. If not supplied, a\n"
     "\t                     header is created out of the format. By default, a\n"

@@ -171,9 +171,15 @@ output_header(char header[], int verbatim) {
             }
             
             if (c[0] == 'n')
-                fputs("COUNT", stdout);
+                if (r != 100)
+                    printf("COUNT%d", r);
+                else
+                    fputs("COUNT", stdout);
             else if (c[0] == 'a')
-                fputs("AVG", stdout);
+                if (r != 100)
+                    printf("AVG%d", r);
+                else
+                    fputs("AVG", stdout);
             
             // Timestamping
             else if (c[0] == 'I')
@@ -239,6 +245,8 @@ check_format(char format[]) {
                 
                 if (r <= 0 || r > 100)
                     return 0;
+                
+                break;
                 
             case '%':
                 if (r != -1)

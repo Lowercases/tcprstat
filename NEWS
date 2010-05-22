@@ -1,3 +1,6 @@
+Version 0.2.2
+    * Percentiles
+
 Version 0.2.1
     * --iterations allows you to spec the number of times you want it
       to run.
