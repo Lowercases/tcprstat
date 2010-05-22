@@ -36,3 +36,4 @@ compile
 install-sh
 missing
 depcomp
+INSTALL
