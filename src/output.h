@@ -27,6 +27,9 @@ struct output_options {
     int interval;       // Seconds
     unsigned long iterations;
     
+    int show_header;
+    char *header;
+    
 };
 
 // Parameter of output_thread is of type output_thread_options

@@ -39,6 +39,8 @@ struct option long_options[] = {
     
     { "port", required_argument, NULL, 'p' },
     { "format", required_argument, NULL, 'f' },
+    { "header", optional_argument, NULL, 's' },
+    { "no-header", no_argument, NULL, 'S' },
     { "interval", required_argument, NULL, 't' },
     { "iterations", required_argument, NULL, 'n' },
 
@@ -56,6 +58,10 @@ struct output_options output_options = {
     DEFAULT_OUTPUT_FORMAT,
     DEFAULT_OUTPUT_INTERVAL,
     DEFAULT_OUTPUT_ITERATIONS,
+    
+    DEFAULT_SHOW_HEADER,
+    NULL,
+    
 };
 
 int
@@ -108,6 +114,15 @@ main(int argc, char *argv[]) {
                 return EXIT_FAILURE;
             }
             
+            break;
+            
+        case 's':
+            output_options.header = optarg;
+            output_options.show_header = 1;
+            break;
+            
+        case 'S':
+            output_options.show_header = 0;
             break;
             
         case 'h':
