@@ -1,7 +1,7 @@
-Version 0.2.2
+Development version
     * Percentiles
 
-Version 0.2.1
+Version 0.2.2
     * --iterations allows you to spec the number of times you want it
       to run.
     * Ability to show timestamps and iteration counts
