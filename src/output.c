@@ -27,13 +27,15 @@
 #include <stdio.h>
 #include <time.h>
 
-static int output(char format[]);
+static int output(char format[], unsigned long iterations);
+
+time_t timestamp;
 
 void *
 output_thread(void *arg) {
     struct output_options *options;
     struct timespec ts;
-    int iterations;
+    unsigned long iterations;
     
     options = arg;
     
@@ -42,12 +44,14 @@ output_thread(void *arg) {
     if (!check_format(options->format))
         abort();
     
+    time(&timestamp);
+    
     for (iterations = 0; !options->iterations || iterations < options->iterations;
             iterations ++)
     {
         nanosleep(&ts, NULL);
         
-        output(options->format);
+        output(options->format, iterations);
         
     }
     
@@ -59,8 +63,9 @@ output_thread(void *arg) {
 }
 
 static int
-output(char format[]) {
+output(char format[], unsigned long iterations) {
     char *c;
+    time_t current = 0;
     
     struct stats_results *results;
     
@@ -87,6 +92,19 @@ output(char format[]) {
                 printf("%u", stats_count(results, r));
             else if (c[0] == 'a')
                 printf("%lu", stats_avg(results, r));
+            
+            // Timestamping
+            else if (c[0] == 'I')
+                printf("%lu", iterations);
+            else if (c[0] == 't' || c[0] == 'T') {
+                if (!current)
+                    time(&current);
+                
+                printf("%lu", current - (c[0] == 't' ? timestamp : 0));
+                
+            }
+            
+            // Actual %
             else if (c[0] == '%')
                 fputc(c[0], stdout);
             
@@ -131,7 +149,9 @@ check_format(char format[]) {
             int r = -1;
             c ++;
             
-            if (c[0] >= '0' && c[0] <= '9') {
+            switch (c[0]) {
+            
+            case '0' ... '9':       // GNU extension
                 r = 0;
                 while (c[0] >= '0' && c[0] <= '9') {
                     r *= 10;
@@ -144,11 +164,22 @@ check_format(char format[]) {
                 if (r <= 0 || r > 100)
                     return 0;
                 
-            }
-            
-            if (c[0] != 'n' && c[0] != 'a' && c[0] != 'r' &&
-                    (c[0] != '%' || r != -1))
+            case '%':
+                if (r != -1)
+                    return 0;
+                
+            case 'n':
+            case 'a':
+            case 'r':
+            case 'I':
+            case 't':
+            case 'T':
+                break;
+
+            default:
                 return 0;
+                
+            }
             
         }
         

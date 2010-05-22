@@ -93,7 +93,7 @@ main(int argc, char *argv[]) {
             break;
             
         case 't':
-            output_options.interval = strtol(optarg, NULL, 10);
+            output_options.interval = strtoul(optarg, NULL, 10);
             if (interval <= 0 || interval >= MAX_OUTPUT_INTERVAL) {
                 fprintf(stderr, "Bad interval provided\n");
                 return EXIT_FAILURE;

@@ -22,7 +22,7 @@
 #if !defined(RTIME_H)
 #define RTIME_H
 
-#define DEFAULT_OUTPUT_FORMAT "%n\\t%a\\n"
+#define DEFAULT_OUTPUT_FORMAT "%I\\t%ts\\t%n\\t%a\\n"
 #define DEFAULT_OUTPUT_INTERVAL 10
 #define DEFAULT_OUTPUT_INTERVAL_STR "10"
 #define MAX_OUTPUT_INTERVAL 60 * 60 * 24
