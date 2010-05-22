@@ -1,21 +1,21 @@
 #
-#   rtime -- Extract stats about TCP response times
-#   Copyright (C) 2010  Ignacio Nin
+# rtime -- Extract stats about TCP response times
+# Copyright (C) 2010 Ignacio Nin
 #
-#   This program is free software; you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation; either version 2 of the License, or
-#   (at your option) any later version.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-#   This program is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
 #
-#   You should have received a copy of the GNU General Public License
-#   along with this program; if not, write to the Free Software
-#   Foundation, Inc.,
-#   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #
 
 #
@@ -30,9 +30,9 @@
 # rtime) to just return an error.
 #
 
-diff -Naur libpcap-1.1.1/nametoaddr.c libpcap-1.1.1-p/nametoaddr.c
+diff -Naur libpcap-1.1.1/nametoaddr.c libpcap-1.1.1-patch/nametoaddr.c
 --- libpcap-1.1.1/nametoaddr.c	2010-03-11 23:56:54.000000000 -0200
-+++ libpcap-1.1.1-p/nametoaddr.c	2010-05-22 01:07:05.861056635 -0300
++++ libpcap-1.1.1-patch/nametoaddr.c	2010-05-22 03:28:15.613054061 -0300
 @@ -98,6 +98,7 @@
  bpf_u_int32 **
  pcap_nametoaddr(const char *name)
@@ -41,7 +41,7 @@ diff -Naur libpcap-1.1.1/nametoaddr.c libpcap-1.1.1-p/nametoaddr.c
  #ifndef h_addr
  	static bpf_u_int32 *hlist[2];
  #endif
-@@ -117,6 +118,9 @@
+@@ -117,12 +118,16 @@
  	}
  	else
  		return 0;
@@ -51,7 +51,24 @@ diff -Naur libpcap-1.1.1/nametoaddr.c libpcap-1.1.1-p/nametoaddr.c
  }
  
  #ifdef INET6
-@@ -145,6 +149,7 @@
+ struct addrinfo *
+ pcap_nametoaddrinfo(const char *name)
+ {
++#if 0
+ 	struct addrinfo hints, *res;
+ 	int error;
+ 
+@@ -135,6 +140,9 @@
+ 		return NULL;
+ 	else
+ 		return res;
++#else
++	return NULL;
++#endif
+ }
+ #endif /*INET6*/
+ 
+@@ -145,6 +153,7 @@
  bpf_u_int32
  pcap_nametonetaddr(const char *name)
  {
@@ -59,7 +76,7 @@ diff -Naur libpcap-1.1.1/nametoaddr.c libpcap-1.1.1-p/nametoaddr.c
  #ifndef WIN32
  	struct netent *np;
  
-@@ -158,6 +163,9 @@
+@@ -158,6 +167,9 @@
  	 */
  	return 0;
  #endif
@@ -69,7 +86,7 @@ diff -Naur libpcap-1.1.1/nametoaddr.c libpcap-1.1.1-p/nametoaddr.c
  }
  
  /*
-@@ -168,6 +176,7 @@
+@@ -168,6 +180,7 @@
  int
  pcap_nametoport(const char *name, int *port, int *proto)
  {
@@ -77,7 +94,7 @@ diff -Naur libpcap-1.1.1/nametoaddr.c libpcap-1.1.1-p/nametoaddr.c
  	struct servent *sp;
  	int tcp_port = -1;
  	int udp_port = -1;
-@@ -212,6 +221,9 @@
+@@ -212,6 +225,9 @@
  	}
  #endif
  	return 0;
@@ -87,7 +104,7 @@ diff -Naur libpcap-1.1.1/nametoaddr.c libpcap-1.1.1-p/nametoaddr.c
  }
  
  /*
-@@ -262,6 +274,7 @@
+@@ -262,6 +278,7 @@
  int
  pcap_nametoproto(const char *str)
  {
@@ -95,7 +112,7 @@ diff -Naur libpcap-1.1.1/nametoaddr.c libpcap-1.1.1-p/nametoaddr.c
  	struct protoent *p;
  
  	p = getprotobyname(str);
-@@ -269,6 +282,9 @@
+@@ -269,6 +286,9 @@
  		return p->p_proto;
  	else
  		return PROTO_UNDEF;
@@ -105,3 +122,23 @@ diff -Naur libpcap-1.1.1/nametoaddr.c libpcap-1.1.1-p/nametoaddr.c
  }
  
  #include "ethertype.h"
+diff -Naur libpcap-1.1.1/scanner.l libpcap-1.1.1-patch/scanner.l
+--- libpcap-1.1.1/scanner.l	2010-03-11 23:56:54.000000000 -0200
++++ libpcap-1.1.1-patch/scanner.l	2010-05-22 03:29:32.435054976 -0300
+@@ -345,12 +345,16 @@
+ 			  memset(&hints, 0, sizeof(hints));
+ 			  hints.ai_family = AF_INET6;
+ 			  hints.ai_flags = AI_NUMERICHOST;
++#if 0
+ 			  if (getaddrinfo(yytext, NULL, &hints, &res))
+ 				bpf_error("bogus IPv6 address %s", yytext);
+ 			  else {
++#endif
+ 				freeaddrinfo(res);
+ 				yylval.s = sdup((char *)yytext); return HID6;
++#if 0
+ 			  }
++#endif
+ #else
+ 			  bpf_error("IPv6 address %s not supported", yytext);
+ #endif /*INET6*/
