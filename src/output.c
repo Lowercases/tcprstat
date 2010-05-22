@@ -21,6 +21,7 @@
  
 #include "output.h"
 #include "stats.h"
+#include "capture.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -32,6 +33,7 @@ void *
 output_thread(void *arg) {
     struct output_options *options;
     struct timespec ts;
+    int iterations;
     
     options = arg;
     
@@ -40,13 +42,17 @@ output_thread(void *arg) {
     if (!check_format(options->format))
         abort();
     
-    do {
+    for (iterations = 0; !options->iterations || iterations < options->iterations;
+            iterations ++)
+    {
         nanosleep(&ts, NULL);
         
         output(options->format);
         
     }
-    while (1);
+    
+    // Iterations finished, signal capturing process
+    endcapture();
     
     return NULL;
     

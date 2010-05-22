@@ -40,11 +40,12 @@ struct option long_options[] = {
     { "port", required_argument, NULL, 'p' },
     { "format", required_argument, NULL, 'f' },
     { "interval", required_argument, NULL, 't' },
+    { "iterations", required_argument, NULL, 'n' },
 
     { NULL, 0, NULL, '\0' }
 
 };
-char *short_options = "hVpf:t:";
+char *short_options = "hVpf:t:n:";
 
 pthread_t capture_thread_id, output_thread_id;
 
@@ -54,6 +55,7 @@ int interval = 30;
 struct output_options output_options = {
     DEFAULT_OUTPUT_FORMAT,
     DEFAULT_OUTPUT_INTERVAL,
+    DEFAULT_OUTPUT_ITERATIONS,
 };
 
 int
@@ -94,6 +96,15 @@ main(int argc, char *argv[]) {
             output_options.interval = strtol(optarg, NULL, 10);
             if (interval <= 0 || interval >= MAX_OUTPUT_INTERVAL) {
                 fprintf(stderr, "Bad interval provided\n");
+                return EXIT_FAILURE;
+            }
+            
+            break;
+            
+        case 'n':
+            output_options.iterations = strtol(optarg, NULL, 10);
+            if (interval < 0) {
+                fprintf(stderr, "Bad iterations provided\n");
                 return EXIT_FAILURE;
             }
             

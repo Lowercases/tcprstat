@@ -25,6 +25,7 @@
 struct output_options {
     char *format;
     int interval;       // Seconds
+    int iterations;
     
 };
 

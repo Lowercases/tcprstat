@@ -38,6 +38,10 @@ char *usage_msg =
     "\t--interval <seconds>, -t\n"
     "\t                     Output interval. Default is "
                                     DEFAULT_OUTPUT_INTERVAL_STR ".\n"
+    "\t--iterations <n>, -n\n"
+    "\t                     Output iterations. Default is "
+                                    DEFAULT_OUTPUT_ITERATIONS_STR
+                                    ", 0 means infinity\n"
     "\n"
     "\t--help               Shows program information and usage.\n"
     "\t--version            Shows version information.\n"
