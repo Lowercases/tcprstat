@@ -18,7 +18,7 @@
 #   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-AM_CFLAGS = -Wall -Werror -g
+AM_CFLAGS = -Wall -Werror
 
 bin_PROGRAMS = rtime rtime-static
 rtime_SOURCES = rtime.h rtime.c functions.h functions.c capture.h capture.c \
@@ -32,9 +32,8 @@ rtime_LDFLAGS = $(AM_LDFLAGS) -L$(top_srcdir)/@LIBPCAP_SUBDIR@ -lpthread
 rtime_LDADD = -lpcap
 
 rtime_static_CFLAGS = $(AM_CFLAGS) -pthread -I$(top_srcdir)/@LIBPCAP_SUBDIR@
-rtime_static_LDFLAGS = $(AM_CFLAGS) -L$(top_srcdir)/@LIBPCAP_SUBDIR@ \
-	-L/usr/lib64 -static
-rtime_static_LDADD = -lpcap -lpthread -lc
+rtime_static_LDFLAGS = $(AM_LDFLAGS) -static -L$(top_srcdir)/@LIBPCAP_SUBDIR@
+rtime_static_LDADD = -lpthread -lpcap
 
 else
 rtime_CFLAGS = $(AM_CFLAGS) -pthread
