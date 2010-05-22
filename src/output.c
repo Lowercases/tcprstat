@@ -27,7 +27,8 @@
 #include <stdio.h>
 #include <time.h>
 
-static int output(char format[], unsigned long iterations);
+static int output(char format[], unsigned long iterations),
+    output_header(char header[], int verbatim);
 
 time_t timestamp;
 
@@ -45,6 +46,14 @@ output_thread(void *arg) {
         abort();
     
     time(&timestamp);
+    
+    if (options->show_header) {
+        if (options->header)
+            output_header(options->header, 1);
+        else
+            output_header(options->format, 0);
+        
+    }
     
     for (iterations = 0; !options->iterations || iterations < options->iterations;
             iterations ++)
@@ -135,6 +144,73 @@ output(char format[], unsigned long iterations) {
     fflush(stdout);
     
     free_results(results);
+    
+    return 0;
+
+}
+
+static int
+output_header(char header[], int verbatim) {
+    char *c;
+    
+    for (c = header; c[0]; c ++)
+        if (c[0] == '%') {
+            int r = 100;
+            c ++;
+            
+            if (c[0] >= '0' && c[0] <= '9') {
+                r = 0;
+                while (c[0] >= '0' && c[0] <= '9') {
+                    r *= 10;
+                    r += c[0] - '0';
+                    
+                    c ++;
+                    
+                }
+                
+            }
+            
+            if (c[0] == 'n')
+                fputs("COUNT", stdout);
+            else if (c[0] == 'a')
+                fputs("AVG", stdout);
+            
+            // Timestamping
+            else if (c[0] == 'I')
+                fputs("ITER#", stdout);
+            else if (c[0] == 't')
+                fputs("ELAP", stdout);
+            else if (c[0] == 'T')
+                fputs("TIMESTAMP", stdout);
+                            
+        }
+        else if (c[0] == '\\') {
+            if (c[1] == 'n') {
+                c ++;
+                fputc('\n', stdout);
+            }
+            else if (c[1] == 't') {
+                c ++;
+                fputc('\t', stdout);
+            }
+            else if (verbatim) {
+                if (c[1] == 'r') {
+                    c ++;
+                    fputc('\r', stdout);
+                }
+                else if (c[1] == '\\') {
+                    c ++;
+                    fputc('\\', stdout);
+                }
+                else
+                    fputc('\\', stdout);
+            }
+        }
+        else if (verbatim)
+            fputc(c[0], stdout);
+        
+            
+    fflush(stdout);
     
     return 0;
 

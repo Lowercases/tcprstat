@@ -29,6 +29,8 @@
 #define DEFAULT_OUTPUT_ITERATIONS 1
 #define DEFAULT_OUTPUT_ITERATIONS_STR "1"
 
+#define DEFAULT_SHOW_HEADER 1
+
 extern int port;
 
 void terminate(int signal);
