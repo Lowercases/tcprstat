@@ -1,0 +1,107 @@
+#
+#   rtime -- Extract stats about TCP response times
+#   Copyright (C) 2010  Ignacio Nin
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#
+
+#
+# RATIONALE
+#
+# This patch is for the successful linking of rtime-static, the statically-linked
+# version of rtime.
+#
+# gethostbyname(3) and friends, when linked statically, require at runtime the
+# C library where they were compiled. We actually don't use names in this
+# application for now, so it's safe (given the advantages of statically linking
+# rtime) to just return an error.
+#
+
+diff -Naur libpcap-1.1.1/nametoaddr.c libpcap-1.1.1-p/nametoaddr.c
+--- libpcap-1.1.1/nametoaddr.c	2010-03-11 23:56:54.000000000 -0200
++++ libpcap-1.1.1-p/nametoaddr.c	2010-05-22 01:07:05.861056635 -0300
+@@ -98,6 +98,7 @@
+ bpf_u_int32 **
+ pcap_nametoaddr(const char *name)
+ {
++#if 0
+ #ifndef h_addr
+ 	static bpf_u_int32 *hlist[2];
+ #endif
+@@ -117,6 +118,9 @@
+ 	}
+ 	else
+ 		return 0;
++#else
++	return 0;
++#endif
+ }
+ 
+ #ifdef INET6
+@@ -145,6 +149,7 @@
+ bpf_u_int32
+ pcap_nametonetaddr(const char *name)
+ {
++#if 0
+ #ifndef WIN32
+ 	struct netent *np;
+ 
+@@ -158,6 +163,9 @@
+ 	 */
+ 	return 0;
+ #endif
++#else
++	return 0;
++#endif
+ }
+ 
+ /*
+@@ -168,6 +176,7 @@
+ int
+ pcap_nametoport(const char *name, int *port, int *proto)
+ {
++#if 0
+ 	struct servent *sp;
+ 	int tcp_port = -1;
+ 	int udp_port = -1;
+@@ -212,6 +221,9 @@
+ 	}
+ #endif
+ 	return 0;
++#else
++	return 0;
++#endif
+ }
+ 
+ /*
+@@ -262,6 +274,7 @@
+ int
+ pcap_nametoproto(const char *str)
+ {
++#if 0
+ 	struct protoent *p;
+ 
+ 	p = getprotobyname(str);
+@@ -269,6 +282,9 @@
+ 		return p->p_proto;
+ 	else
+ 		return PROTO_UNDEF;
++#else
++	return PROTO_UNDEF;
++#endif
+ }
+ 
+ #include "ethertype.h"
