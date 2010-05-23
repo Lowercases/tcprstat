@@ -1,6 +1,6 @@
-Development version
+Version 0.2.3
     * Percentiles
-    * Sum, min, max, median
+    * Sum, min, max, median, std dev
 
 Version 0.2.2
     * --iterations allows you to spec the number of times you want it
