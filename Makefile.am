@@ -23,3 +23,5 @@ SUBDIRS = libpcap src
 else
 SUBDIRS = src
 endif
+
+CLEANFILES = rtime-*.tar.gz
