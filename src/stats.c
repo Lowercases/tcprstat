@@ -60,6 +60,8 @@ int exiting;
 static void *clean_thread(void *);
 static int lock_sessions(void), unlock_sessions(void),
     lock_stats(void), unlock_stats(void);
+
+static unsigned long isqrt(unsigned long) __attribute__ ((const));
     
 int
 init_stats(void) {
@@ -352,7 +354,7 @@ unsigned long
 stats_avg(struct stats_results *results, int percentile) {
     unsigned long n;
     unsigned long avg = 0;
-    unsigned i;
+    unsigned long i;
     
     if (!results->statscount)
         return 0;
@@ -383,7 +385,7 @@ unsigned long
 stats_sum(struct stats_results *results, int percentile) {
     unsigned long n;
     unsigned long sum = 0;
-    unsigned i;
+    unsigned long i;
     
     if (!results->statscount)
         return 0;
@@ -461,5 +463,74 @@ stats_med(struct stats_results *results, int percentile) {
         sort_results(results);
     
     return results->stats[n / 2];
+    
+}
+
+unsigned long
+stats_var(struct stats_results *results, int percentile) {
+    unsigned long avg, var;
+    unsigned long n;
+    unsigned long i;
+    
+    if (!results->statscount)
+        return 0;
+    
+    if (percentile == 0 || percentile == 100)
+        n = results->statscount;
+    else
+        n = (results->statscount * percentile) / 100;
+    
+    if (!n)
+        return 0;   // Is this correct? or should [0] be returned?
+    
+    avg = stats_avg(results, percentile);
+    
+    // Variance is the sum of squares, divided by n, less the square of the avg
+    
+    // Sum of squares
+    var = 0;
+    for (i = 0; i < n; i ++)
+        var += results->stats[i] * results->stats[i];
+    
+    var /= n;
+    var -= avg * avg;
+    
+    return var;
+    
+}
+
+unsigned long
+stats_std(struct stats_results *results, int percentile) {
+    return isqrt(stats_var(results, percentile));
+    
+}
+
+// Based in code from
+// http://www.codecodex.com/wiki/Calculate_an_integer_square_root#C
+// It stipulates that content is available under the
+// GNU Free Documentation License
+static unsigned long
+isqrt(unsigned long x)
+{
+    unsigned long op, res, one;
+
+    op = x;
+    res = 0;
+
+    // "one" starts at the highest power of four <= than the argument.
+    one = 1;
+    while (one < op) one <<= 2;
+    while (one > op) one >>= 2;
+
+    while (one) {
+        if (op >= res + one) {
+            op -= res + one;
+            res += one << 1;
+        }
+        res >>= 1;
+        one >>= 2;
+    }
+    
+    return res;
     
 }

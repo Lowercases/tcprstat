@@ -109,6 +109,10 @@ output(char format[], unsigned long iterations) {
                 printf("%lu", stats_max(results, r));
             else if (c[0] == 'h')
                 printf("%lu", stats_med(results, r));
+            else if (c[0] == 'S')
+                printf("%lu", stats_std(results, r));
+            else if (c[0] == 'v')
+                printf("%lu", stats_var(results, r));
             
             // Timestamping
             else if (c[0] == 'I')
@@ -208,6 +212,16 @@ output_header(char header[], int verbatim) {
                     printf("MED%d", r);
                 else
                     fputs("MED", stdout);
+            else if (c[0] == 'S')
+                if (r != 100)
+                    printf("STD%d", r);
+                else
+                    fputs("STDDEV", stdout);
+            else if (c[0] == 'v')
+                if (r != 100)
+                    printf("VAR%d", r);
+                else
+                    fputs("VAR", stdout);
             
             // Timestamping
             else if (c[0] == 'I')
@@ -290,6 +304,8 @@ check_format(char format[]) {
             case 'm':
             case 'M':
             case 'h':
+            case 'S':
+            case 'v':
                 break;
 
             default:

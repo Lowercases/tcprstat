@@ -37,6 +37,8 @@ char *usage_msg =
     "\t                         %m - Minimum value\n"
     "\t                         %M - Maximum value\n"
     "\t                         %h - Median value\n"
+    "\t                         %S - Standard deviation\n"
+    "\t                         %v - Variance (square stddev)\n"
     "\t                         %I - Iteration number\n"
     "\t                         %t - Timestamp since iteration zero\n"
     "\t                         %T - Unix timestamp\n"

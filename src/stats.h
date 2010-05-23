@@ -44,5 +44,7 @@ unsigned long stats_sum(struct stats_results *r, int percentile);
 unsigned long stats_min(struct stats_results *r, int percentile);
 unsigned long stats_max(struct stats_results *r, int percentile);
 unsigned long stats_med(struct stats_results *r, int percentile);
+unsigned long stats_var(struct stats_results *r, int percentile);
+unsigned long stats_std(struct stats_results *r, int percentile);
 
 #endif
