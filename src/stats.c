@@ -379,4 +379,87 @@ stats_avg(struct stats_results *results, int percentile) {
     
 }
 
+unsigned long
+stats_sum(struct stats_results *results, int percentile) {
+    unsigned long n;
+    unsigned long sum = 0;
+    unsigned i;
+    
+    if (!results->statscount)
+        return 0;
 
+    if (percentile == 0 || percentile == 100)
+        n = results->statscount;
+    else {
+        if (!results->sorted)
+            sort_results(results);
+        
+        n = (results->statscount * percentile ) / 100;
+        
+    }
+    
+    if (!n)
+        return 0;
+    
+    for (i = 0; i < n; i ++)
+        sum += results->stats[i];
+    
+    return sum;
+    
+}
+
+unsigned long
+stats_min(struct stats_results *results, int percentile) {
+    if (!results->statscount)
+        return 0;
+    
+    if (!results->sorted)
+        sort_results(results);
+    
+    return results->stats[0];
+    
+}
+
+unsigned long
+stats_max(struct stats_results *results, int percentile) {
+    unsigned long n;
+    
+    if (!results->statscount)
+        return 0;
+    
+    if (percentile == 0 || percentile == 100)
+        n = results->statscount;
+    else
+        n = (results->statscount * percentile) / 100;
+    
+    if (!n)
+        return 0;   // Is this correct? or should [0] be returned?
+    
+    if (!results->sorted)
+        sort_results(results);
+    
+    return results->stats[n - 1];
+    
+}
+
+unsigned long
+stats_med(struct stats_results *results, int percentile) {
+    unsigned long n;
+    
+    if (!results->statscount)
+        return 0;
+    
+    if (percentile == 0 || percentile == 100)
+        n = results->statscount;
+    else
+        n = (results->statscount * percentile) / 100;
+    
+    if (!n)
+        return 0;   // Is this correct? or should [0] be returned?
+    
+    if (!results->sorted)
+        sort_results(results);
+    
+    return results->stats[n / 2];
+    
+}

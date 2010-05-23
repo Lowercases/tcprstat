@@ -101,6 +101,14 @@ output(char format[], unsigned long iterations) {
                 printf("%u", stats_count(results, r));
             else if (c[0] == 'a')
                 printf("%lu", stats_avg(results, r));
+            else if (c[0] == 's')
+                printf("%lu", stats_sum(results, r));
+            else if (c[0] == 'm')
+                printf("%lu", stats_min(results, r));
+            else if (c[0] == 'M')
+                printf("%lu", stats_max(results, r));
+            else if (c[0] == 'h')
+                printf("%lu", stats_med(results, r));
             
             // Timestamping
             else if (c[0] == 'I')
@@ -180,12 +188,32 @@ output_header(char header[], int verbatim) {
                     printf("AVG%d", r);
                 else
                     fputs("AVG", stdout);
+            else if (c[0] == 's')
+                if (r != 100)
+                    printf("SUM%d", r);
+                else
+                    fputs("SUM", stdout);
+            else if (c[0] == 'm')
+                if (r != 100)
+                    printf("MIN%d", r);
+                else
+                    fputs("MIN", stdout);
+            else if (c[0] == 'M')
+                if (r != 100)
+                    printf("MAX%d", r);
+                else
+                    fputs("MAX", stdout);
+            else if (c[0] == 'h')
+                if (r != 100)
+                    printf("MED%d", r);
+                else
+                    fputs("MED", stdout);
             
             // Timestamping
             else if (c[0] == 'I')
                 fputs("ITER#", stdout);
             else if (c[0] == 't')
-                fputs("ELAP", stdout);
+                fputs("ELAPSED", stdout);
             else if (c[0] == 'T')
                 fputs("TIMESTAMP", stdout);
                             
@@ -254,10 +282,14 @@ check_format(char format[]) {
                 
             case 'n':
             case 'a':
+            case 's':
             case 'r':
             case 'I':
             case 't':
             case 'T':
+            case 'm':
+            case 'M':
+            case 'h':
                 break;
 
             default:

@@ -1,5 +1,6 @@
 Development version
     * Percentiles
+    * Sum, min, max, median
 
 Version 0.2.2
     * --iterations allows you to spec the number of times you want it
