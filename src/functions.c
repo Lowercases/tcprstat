@@ -20,6 +20,7 @@
 **/
 
 #include <stdio.h>
+#include <pcap.h>
 
 #include "config.h"
 #include "functions.h"
@@ -84,7 +85,8 @@ dump_help(FILE *stream) {
 
 int
 dump_version(FILE *stream) {
-    fprintf(stream, "%s %s.\n", PACKAGE_NAME, PACKAGE_VERSION);
+    fprintf(stream, "%s %s, %s.\n", PACKAGE_NAME, PACKAGE_VERSION,
+            pcap_lib_version());
 
     return 0;
 
