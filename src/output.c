@@ -184,52 +184,52 @@ output_header(char header[], int verbatim) {
             
             if (c[0] == 'n')
                 if (r != 100)
-                    printf("COUNT%d", r);
+                    printf("%d_cnt", r);
                 else
-                    fputs("COUNT", stdout);
+                    fputs("count", stdout);
             else if (c[0] == 'a')
                 if (r != 100)
-                    printf("AVG%d", r);
+                    printf("%d_avg", r);
                 else
-                    fputs("AVG", stdout);
+                    fputs("avg", stdout);
             else if (c[0] == 's')
                 if (r != 100)
-                    printf("SUM%d", r);
+                    printf("%d_sum", r);
                 else
-                    fputs("SUM", stdout);
+                    fputs("sum", stdout);
             else if (c[0] == 'm')
                 if (r != 100)
-                    printf("MIN%d", r);
+                    printf("%d_min", r);
                 else
-                    fputs("MIN", stdout);
+                    fputs("min", stdout);
             else if (c[0] == 'M')
                 if (r != 100)
-                    printf("MAX%d", r);
+                    printf("%d_max", r);
                 else
-                    fputs("MAX", stdout);
+                    fputs("max", stdout);
             else if (c[0] == 'h')
                 if (r != 100)
-                    printf("MED%d", r);
+                    printf("%d_med", r);
                 else
-                    fputs("MED", stdout);
+                    fputs("med", stdout);
             else if (c[0] == 'S')
                 if (r != 100)
-                    printf("STD%d", r);
+                    printf("%d_std", r);
                 else
-                    fputs("STDDEV", stdout);
+                    fputs("stddev", stdout);
             else if (c[0] == 'v')
                 if (r != 100)
-                    printf("VAR%d", r);
+                    printf("%d_var", r);
                 else
-                    fputs("VAR", stdout);
+                    fputs("var", stdout);
             
             // Timestamping
             else if (c[0] == 'I')
-                fputs("ITER#", stdout);
+                fputs("iter#", stdout);
             else if (c[0] == 't')
-                fputs("ELAPSED", stdout);
+                fputs("elapsed", stdout);
             else if (c[0] == 'T')
-                fputs("TIMESTAMP", stdout);
+                fputs("timestamp", stdout);
                             
         }
         else if (c[0] == '\\') {
