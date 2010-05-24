@@ -1,3 +1,7 @@
+Version 0.2.4
+    * More polished messages
+    * More data in default output
+
 Version 0.2.3
     * Percentiles
     * Sum, min, max, median, std dev
