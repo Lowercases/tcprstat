@@ -22,8 +22,10 @@
 #if !defined(FUNCTIONS_H)
 #define FUNCTIONS_H
 
-int dump_usage(void);
-int dump_help(void);
-int dump_version(void);
+#include <stdio.h>
+
+int dump_usage(FILE *stream);
+int dump_help(FILE *stream);
+int dump_version(FILE *stream);
 
 #endif

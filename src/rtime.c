@@ -25,6 +25,7 @@
 #include <stdint.h>
 #include <signal.h>
 #include <pthread.h>
+#include <string.h>
 
 #include "rtime.h"
 #include "functions.h"
@@ -52,6 +53,7 @@ char *short_options = "hVpf:t:n:";
 pthread_t capture_thread_id, output_thread_id;
 
 // Global options
+char *program_name;
 int port;
 int interval = 30;
 struct output_options output_options = {
@@ -69,6 +71,13 @@ main(int argc, char *argv[]) {
     struct sigaction sa;
     char c;
     int option_index = 0;
+    
+    // Program name
+    program_name = strrchr(argv[0], '/');
+    if (program_name)
+        program_name ++;
+    else
+        program_name = argv[0];
         
     // Parse command line options
     do {
@@ -126,15 +135,15 @@ main(int argc, char *argv[]) {
             break;
             
         case 'h':
-            dump_help();
+            dump_help(stdout);
             return EXIT_SUCCESS;
 
         case 'V':
-            dump_version();
+            dump_version(stdout);
             return EXIT_SUCCESS;
 
         default:
-            dump_usage();
+            dump_usage(stderr);
             return EXIT_FAILURE;
 
         }

@@ -26,41 +26,38 @@
 #include "rtime.h"
 
 char *usage_msg =
-    "Usage: rtime [--port <port>] [--format=<format>] [--interval=<sec>]\n"
+    "Usage: %s [--port <port>] [--format=<format>] [--interval=<sec>]\n"
     "             [--header[=<header>] | --no-header] [--iterations=<it>]\n"
-    "       rtime --version | --help\n"
+    "       %s --version | --help\n"
     "\n"
     "\t--port <port>, -p    Capture traffic only for tcp/<port>.\n"
     "\t--format <format>, -f\n"
     "\t                     Output format. Argument is a string detailing\n"
     "\t                     how the information is presented. Accepted codes:\n"
-    "\t                         %n - Response time count\n"
-    "\t                         %a - Response time media in microseconds\n"
-    "\t                         %s - Response time sum\n"
-    "\t                         %m - Minimum value\n"
-    "\t                         %M - Maximum value\n"
-    "\t                         %h - Median value\n"
-    "\t                         %S - Standard deviation\n"
-    "\t                         %v - Variance (square stddev)\n"
-    "\t                         %I - Iteration number\n"
-    "\t                         %t - Timestamp since iteration zero\n"
-    "\t                         %T - Unix timestamp\n"
-    "\t                         %% - A literal %\n"
+    "\t                         %%n - Response time count\n"
+    "\t                         %%a - Response time media in microseconds\n"
+    "\t                         %%s - Response time sum\n"
+    "\t                         %%m - Minimum value\n"
+    "\t                         %%M - Maximum value\n"
+    "\t                         %%h - Median value\n"
+    "\t                         %%S - Standard deviation\n"
+    "\t                         %%v - Variance (square stddev)\n"
+    "\t                         %%I - Iteration number\n"
+    "\t                         %%t - Timestamp since iteration zero\n"
+    "\t                         %%T - Unix timestamp\n"
+    "\t                         %%%% - A literal %%\n"
     "\t                     Default is:\n"
-    "    \"" DEFAULT_OUTPUT_FORMAT "\".\n"
+    "    \"%s\".\n"
     "\t                     Statistics may contain a percentile between\n"
-    "\t                     the percentage sign and the code: %99n, %95a.\n"
+    "\t                     the percentage sign and the code: %%99n, %%95a.\n"
     "\t--header[=<header>], --no-header\n"
     "\t                     Whether to output a header. If not supplied, a\n"
     "\t                     header is created out of the format. By default,\n"
     "\t                     the header is shown.\n"
     "\t--interval <seconds>, -t\n"
-    "\t                     Output interval. Default is "
-                                    DEFAULT_OUTPUT_INTERVAL_STR ".\n"
+    "\t                     Output interval. Default is %d.\n"
     "\t--iterations <n>, -n\n"
-    "\t                     Output iterations. Default is "
-                                    DEFAULT_OUTPUT_ITERATIONS_STR
-                                    ", 0 means infinity\n"
+    "\t                     Output iterations. Default is %d, 0 is infinity\n"
     "\n"
     "\t--help               Shows program information and usage.\n"
     "\t--version            Shows version information.\n"
@@ -68,25 +65,26 @@ char *usage_msg =
 ;
 
 int
-dump_usage(void) {
-    fprintf(stderr, "%s", usage_msg);
+dump_usage(FILE *stream) {
+    fprintf(stream, usage_msg, program_name, program_name, 
+    DEFAULT_OUTPUT_FORMAT, DEFAULT_OUTPUT_INTERVAL, DEFAULT_OUTPUT_ITERATIONS);
 
     return 0;
 
 }
 
 int
-dump_help(void) {
-    dump_version();
-    fprintf(stdout, "%s", usage_msg);
+dump_help(FILE *stream) {
+    dump_version(stream);
+    dump_usage(stream);
 
     return 0;
 
 }
 
 int
-dump_version(void) {
-    fprintf(stdout, "%s %s.\n", PACKAGE_NAME, PACKAGE_VERSION);
+dump_version(FILE *stream) {
+    fprintf(stream, "%s %s.\n", PACKAGE_NAME, PACKAGE_VERSION);
 
     return 0;
 

@@ -26,14 +26,13 @@
     "%T\\t%n\\t%s\\t%M\\t%m\\t%a\\t%h\\t%S\\t" \
     "%90M\\t%90a\\t%90S\\t%99M\\t%99a\\t%99S\\n"
 #define DEFAULT_OUTPUT_INTERVAL 10
-#define DEFAULT_OUTPUT_INTERVAL_STR "10"
 #define MAX_OUTPUT_INTERVAL 60 * 60 * 24
 #define DEFAULT_OUTPUT_ITERATIONS 1
-#define DEFAULT_OUTPUT_ITERATIONS_STR "1"
 
 #define DEFAULT_SHOW_HEADER 1
 
 extern int port;
+extern char *program_name;
 
 void terminate(int signal);
 
