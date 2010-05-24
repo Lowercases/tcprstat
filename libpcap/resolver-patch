@@ -21,8 +21,8 @@
 #
 # RATIONALE
 #
-# This patch is for the successful linking of rtime-static, the statically-linked
-# version of rtime.
+# This patch is for the successful linking of rtime-static, the
+# statically-linked version of rtime.
 #
 # gethostbyname(3) and friends, when linked statically, require at runtime the
 # C library where they were compiled. We actually don't use names in this
