@@ -105,13 +105,10 @@ free_stats(void) {
 }
 
 int
-inbound(struct in_addr laddr, struct in_addr raddr,
+inbound(struct timeval tv, struct in_addr laddr, struct in_addr raddr,
         uint16_t lport, uint16_t rport)
 {
     struct session *prev;
-    struct timeval tv;
-    
-    gettimeofday(&tv, NULL);
     
     lock_sessions();
     
@@ -148,13 +145,10 @@ inbound(struct in_addr laddr, struct in_addr raddr,
 }
 
 int
-outbound(struct in_addr laddr, struct in_addr raddr,
+outbound(struct timeval tv, struct in_addr laddr, struct in_addr raddr,
          uint16_t lport, uint16_t rport)
 {
     struct session *prev;
-    struct timeval tv;
-    
-    gettimeofday(&tv, NULL);
     
     lock_sessions();
     

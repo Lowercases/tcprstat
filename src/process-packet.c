@@ -79,12 +79,12 @@ process_packet(unsigned char *user, const struct pcap_pkthdr *header,
     if (packet_type != ETHERTYPE_IP)
         return;
     
-    process_ip(pcap, ip);
+    process_ip(pcap, ip, header->ts);
     
 }
 
 int
-process_ip(pcap_t *dev, const struct ip *ip) {
+process_ip(pcap_t *dev, const struct ip *ip, struct timeval tv) {
     char src[16], dst[16], *addr;
     int incoming;
     unsigned len;
@@ -141,14 +141,14 @@ process_ip(pcap_t *dev, const struct ip *ip) {
             lport = dport;
             rport = sport;
             
-            inbound(ip->ip_dst, ip->ip_src, lport, rport);
+            inbound(tv, ip->ip_dst, ip->ip_src, lport, rport);
             
         }
         else {
             lport = sport;
             rport = dport;
             
-            outbound(ip->ip_src, ip->ip_dst, lport, rport);
+            outbound(tv, ip->ip_src, ip->ip_dst, lport, rport);
             
         }
 

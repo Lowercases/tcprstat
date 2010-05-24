@@ -27,6 +27,6 @@
 
 void process_packet(unsigned char *, const struct pcap_pkthdr *,
                     const unsigned char *);
-int process_ip(pcap_t *dev, const struct ip *ip);
+int process_ip(pcap_t *dev, const struct ip *ip, struct timeval tv);
 
 #endif
