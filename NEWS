@@ -1,3 +1,7 @@
+Version 0.2.5
+    * Bugfix: -p works
+    * Bugfix: Bailed out after 2000 data gathered
+
 Version 0.2.4
     * More polished messages
     * More data in default output
