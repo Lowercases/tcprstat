@@ -48,7 +48,7 @@ struct option long_options[] = {
     { NULL, 0, NULL, '\0' }
 
 };
-char *short_options = "hVpf:t:n:";
+char *short_options = "hVp:f:t:n:";
 
 pthread_t capture_thread_id, output_thread_id;
 
