@@ -176,7 +176,6 @@ outbound(struct timeval tv, struct in_addr laddr, struct in_addr raddr,
             lock_stats();
             
             if (statscount == statssz) {
-                exit(9);
                 stats = realloc(stats, (statssz *= 2) * sizeof(long));
                 if (!stats)
                     abort();
