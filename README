@@ -1,0 +1,44 @@
+                                  ~ rtime ~
+
+rtime is a pcap-based tool that extracts information about TCP response times.
+
+It works by sniffing for TCP "requests" (inbound packets) and measures the time
+that it takes for sending a "response" (next outbound packet). While this
+approach might seem too simple, it works for simple protocols that are based in
+such request/response system, like HTTP and the MySQL protocol. In the future,
+we may write more complex protocol decoding.
+
+rtime sniffs for a while, and then shows some stats about the sniffed packets,
+similar to the way top(1) works.
+
+rtime uses libpcap to capture TCP. Due to many distros not shipping
+libpcap >= 1.0.0, rtime ships libpcap 1.1.1 and uses it if it can't find a
+suitable version
+
+The build process delivers a static version, rtime-static, with no external
+linking (some castration is needed at libpcap) so it can be copied directly to
+a server with no need for compilation tools.
+
+rtime is released under the GPL, version 2 or 3.
+
+################################################################################
+#                                                                              #
+#   rtime -- Extract stats about TCP response times                            #
+#   Copyright (C) 2010  Ignacio Nin                                            #
+#                                                                              #
+#   This program is free software; you can redistribute it and/or modify       #
+#   it under the terms of the GNU General Public License as published by       #
+#   the Free Software Foundation; either version 2 of the License, or          #
+#   (at your option) any later version.                                        #
+#                                                                              #
+#   This program is distributed in the hope that it will be useful,            #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of             #
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              #
+#   GNU General Public License for more details.                               #
+#                                                                              #
+#   You should have received a copy of the GNU General Public License          #
+#   along with this program; if not, write to the Free Software                #
+#   Foundation, Inc.,                                                          #
+#   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA               #
+#                                                                              #
+################################################################################
