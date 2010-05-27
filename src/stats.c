@@ -61,7 +61,7 @@ static unsigned long isqrt(unsigned long) __attribute__ ((const));
     
 int
 init_stats(void) {
-    stats = malloc((statssz = INITIAL_STAT_SZ) * sizeof(long));
+    stats = malloc((statssz = INITIAL_STAT_SZ) * sizeof(unsigned long));
     if (!stats)
         abort();
     
@@ -132,7 +132,7 @@ outbound(struct timeval tv, struct in_addr laddr, struct in_addr raddr,
         lock_stats();
         
         if (statscount == statssz) {
-            stats = realloc(stats, (statssz *= 2) * sizeof(long));
+            stats = realloc(stats, (statssz *= 2) * sizeof(unsigned long));
             if (!stats)
                 abort();
             
@@ -233,7 +233,7 @@ get_flush_stats(void) {
     
     ret->sorted = 0;
     
-    stats = malloc((statssz = INITIAL_STAT_SZ) * sizeof(long));
+    stats = malloc((statssz = INITIAL_STAT_SZ) * sizeof(unsigned long));
     if (!stats)
         abort();
     statscount = 0;
