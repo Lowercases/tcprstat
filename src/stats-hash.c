@@ -163,6 +163,11 @@ hash_clean(struct hash *hash, unsigned long min) {
                 
                 hash->count --;
                 
+                // This break is to prevent a segmentation fault when
+                // session->next is NULL (session will be null next)
+                if (!session->next)
+                    break;
+                
             }
             
     }
@@ -180,6 +185,7 @@ hash_set_internal(struct session *sessions, unsigned long sz,
     unsigned long port;
     
     port = hash_fun(laddr, raddr, lport, rport) % sz;
+
     for (session = sessions + port; session->next; session = session->next)
         if (
             session->next->raddr == raddr &&
