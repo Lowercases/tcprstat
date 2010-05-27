@@ -27,4 +27,4 @@ clean-local:
 distclean:
 	rm -rf libpcap-*/
 
-EXTRA_DIST = libpcap-*.tar.gz
+EXTRA_DIST = libpcap-*.tar.gz resolver-patch
