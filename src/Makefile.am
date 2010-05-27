@@ -18,7 +18,7 @@
 #   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-AM_CFLAGS = -Wall -Werror
+AM_CFLAGS = -Wall -Werror -g
 
 bin_PROGRAMS = rtime rtime-static
 rtime_SOURCES = rtime.h rtime.c functions.h functions.c capture.h capture.c \
