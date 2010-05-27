@@ -23,7 +23,7 @@ AM_CFLAGS = -Wall -Werror
 bin_PROGRAMS = rtime rtime-static
 rtime_SOURCES = rtime.h rtime.c functions.h functions.c capture.h capture.c \
 	process-packet.h process-packet.c local-addresses.h local-addresses.c \
-	stats.h stats.c output.h output.c
+	stats.h stats.c output.h output.c stats-hash.h stats-hash.c
 rtime_static_SOURCES = $(rtime_SOURCES)
 
 if BUILD_PCAP

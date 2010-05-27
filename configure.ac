@@ -47,6 +47,7 @@ AC_CHECK_HEADER([pcap/sll.h], , [buildpcap=yes])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_UINT16_T
+AC_CHECK_SIZEOF([unsigned long])
 
 # Checks for library functions.
 AC_FUNC_MALLOC
