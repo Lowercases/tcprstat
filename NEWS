@@ -1,3 +1,7 @@
+Version 0.2.6
+    * Implementation now uses a hash table for the stat sessions,
+      using much less CPU
+
 Version 0.2.5
     * Bugfix: -p works
     * Bugfix: Bailed out after 2000 data gathered
