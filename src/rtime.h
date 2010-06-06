@@ -22,6 +22,8 @@
 #if !defined(RTIME_H)
 #define RTIME_H
 
+#include <time.h>
+
 #define DEFAULT_OUTPUT_FORMAT \
     "%T\\t%n\\t%s\\t%M\\t%m\\t%a\\t%h\\t%S\\t" \
     "%90M\\t%90a\\t%90S\\t%99M\\t%99a\\t%99S\\n"
@@ -33,6 +35,7 @@
 
 extern int port;
 extern char *program_name;
+extern time_t timestamp;
 
 void terminate(int signal);
 

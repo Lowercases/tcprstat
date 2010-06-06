@@ -22,6 +22,7 @@
 #include "output.h"
 #include "stats.h"
 #include "capture.h"
+#include "rtime.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -29,8 +30,6 @@
 
 static int output(char format[], unsigned long iterations),
     output_header(char header[], int verbatim);
-
-time_t timestamp;
 
 void *
 output_thread(void *arg) {
@@ -44,8 +43,6 @@ output_thread(void *arg) {
     
     if (!check_format(options->format))
         abort();
-    
-    time(&timestamp);
     
     if (options->show_header) {
         if (options->header)

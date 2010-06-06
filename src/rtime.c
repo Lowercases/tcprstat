@@ -26,6 +26,7 @@
 #include <signal.h>
 #include <pthread.h>
 #include <string.h>
+#include <time.h>
 
 #include "rtime.h"
 #include "functions.h"
@@ -65,6 +66,9 @@ struct output_options output_options = {
     NULL,
     
 };
+
+// Operation timestamp
+time_t timestamp;
 
 int
 main(int argc, char *argv[]) {
@@ -165,6 +169,9 @@ main(int argc, char *argv[]) {
     // Get local addresses
     if (get_addresses() != 0)
         return EXIT_FAILURE;
+    
+    // Operations timestamp
+    time(&timestamp);
     
     // Stats
     init_stats();
