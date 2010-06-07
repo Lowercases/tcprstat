@@ -26,8 +26,8 @@
 #include <stdio.h>
 
 #define DEFAULT_OUTPUT_FORMAT \
-    "%T\\t%n\\t%s\\t%M\\t%m\\t%a\\t%h\\t%S\\t" \
-    "%90M\\t%90a\\t%90S\\t%99M\\t%99a\\t%99S\\n"
+    "%T\\t%n\\t%M\\t%m\\t%a\\t%h\\t%S\\t" \
+    "%95M\\t%95a\\t%95S\\t%99M\\t%99a\\t%99S\\n"
 #define DEFAULT_OUTPUT_INTERVAL 10
 #define MAX_OUTPUT_INTERVAL 60 * 60 * 24
 #define DEFAULT_OUTPUT_ITERATIONS 1
