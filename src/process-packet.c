@@ -101,23 +101,10 @@ process_ip(pcap_t *dev, const struct ip *ip, struct timeval tv) {
         incoming = 0;
     else if (is_local_address(ip->ip_dst))
         incoming = 1;
-    else {
-#if defined(DEBUG)
-        char *src, *dst;
-        src = strdup(inet_ntoa(ip->ip_src));
-        dst = strdup(inet_ntoa(ip->ip_dst));
-        printf("UNKNOWN DIRS %s:%s\n", src, dst);
-        free(src);
-        free(dst);
-#endif
+    else
         return 1;
-    }
     
     len = htons(ip->ip_len);
-    
-#if defined(DEBUG)
-     printf("%s:%s\tsz %u", src, dst, len);
-#endif
     
     switch (ip->ip_p) {
         struct tcphdr *tcp;
