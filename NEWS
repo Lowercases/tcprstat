@@ -1,6 +1,8 @@
-Development version
+Version 0.3.0
     * Offline captures from pcap savefiles
     * Ability to specify which are the local addresses.
+    * Switched to default 95 percentile insted of 90 percentile.
+    * Prevented incorrect results by looking only for data TCP.
 
 Version 0.2.6
     * Implementation now uses a hash table for the stat sessions,
