@@ -27,6 +27,7 @@
 #include <pthread.h>
 #include <string.h>
 #include <time.h>
+#include <errno.h>
 
 #include "rtime.h"
 #include "functions.h"
@@ -45,11 +46,12 @@ struct option long_options[] = {
     { "no-header", no_argument, NULL, 'S' },
     { "interval", required_argument, NULL, 't' },
     { "iterations", required_argument, NULL, 'n' },
+    { "read", required_argument, NULL, 'r' },
 
     { NULL, 0, NULL, '\0' }
 
 };
-char *short_options = "hVp:f:t:n:";
+char *short_options = "hVp:f:t:n:r:";
 
 pthread_t capture_thread_id, output_thread_id;
 
@@ -57,6 +59,7 @@ pthread_t capture_thread_id, output_thread_id;
 char *program_name;
 int port;
 int interval = 30;
+FILE *capture_file = NULL;
 struct output_options output_options = {
     DEFAULT_OUTPUT_FORMAT,
     DEFAULT_OUTPUT_INTERVAL,
@@ -90,6 +93,16 @@ main(int argc, char *argv[]) {
         switch (c) {
 
         case -1:
+            break;
+            
+        case 'r':
+            capture_file = fopen(optarg, "r");
+            if (!capture_file) {
+                fprintf(stderr, "Cannot open file `%s': %s\n", optarg,
+                        strerror(errno));
+                return EXIT_FAILURE;
+                
+            }
             break;
             
         case 'p':
@@ -176,15 +189,26 @@ main(int argc, char *argv[]) {
     // Stats
     init_stats();
     
-    // Fire up capturing thread
-    pthread_create(&capture_thread_id, NULL, capture, NULL);
-    
-    // Options thread
-    pthread_create(&output_thread_id, NULL, output_thread, &output_options);
-    
-    pthread_join(capture_thread_id, NULL);
-    pthread_kill(output_thread_id, SIGINT);
-    
+    if (capture_file) {
+        output_offline_start(&output_options);
+
+        offline_capture(capture_file);
+        
+        fclose(capture_file);
+        
+    }
+    else {
+        // Fire up capturing thread
+        pthread_create(&capture_thread_id, NULL, capture, NULL);
+        
+        // Options thread
+        pthread_create(&output_thread_id, NULL, output_thread, &output_options);
+        
+        pthread_join(capture_thread_id, NULL);
+        pthread_kill(output_thread_id, SIGINT);
+        
+    }
+        
     free_stats();
     free_addresses();
     

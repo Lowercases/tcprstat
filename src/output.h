@@ -22,6 +22,8 @@
 #if !defined(OUTPUT_H)
 #define OUTPUT_H
 
+#include <sys/time.h>
+
 struct output_options {
     char *format;
     int interval;       // Seconds
@@ -34,6 +36,9 @@ struct output_options {
 
 // Parameter of output_thread is of type output_thread_options
 void *output_thread(void *arg);
+int output_offline_start(struct output_options *arg);
+int output_offline_update(struct timeval tv);
+
 int check_format(char format[]);
 
 #endif

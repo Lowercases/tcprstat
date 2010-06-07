@@ -1,3 +1,6 @@
+Development version
+    * Offline captures from pcap savefiles
+
 Version 0.2.6
     * Implementation now uses a hash table for the stat sessions,
       using much less CPU

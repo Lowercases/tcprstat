@@ -29,8 +29,10 @@
 char *usage_msg =
     "Usage: %s [--port <port>] [--format=<format>] [--interval=<sec>]\n"
     "             [--header[=<header>] | --no-header] [--iterations=<it>]\n"
+    "             [--read=<file>]\n"
     "       %s --version | --help\n"
     "\n"
+    "\t--read <file>, -r    Capture from pcap file <file>, not live.\n"
     "\t--port <port>, -p    Capture traffic only for tcp/<port>.\n"
     "\t--format <format>, -f\n"
     "\t                     Output format. Argument is a string detailing\n"

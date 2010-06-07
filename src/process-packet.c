@@ -34,6 +34,8 @@
 
 #include "local-addresses.h"
 #include "stats.h"
+#include "rtime.h"
+#include "output.h"
 
 void
 process_packet(unsigned char *user, const struct pcap_pkthdr *header,
@@ -44,7 +46,7 @@ process_packet(unsigned char *user, const struct pcap_pkthdr *header,
     const struct ether_header *ether_header;
     const struct ip *ip;
     unsigned short packet_type;
-    
+
     pcap = (pcap_t *) user;
 
     // Parse packet
@@ -78,6 +80,9 @@ process_packet(unsigned char *user, const struct pcap_pkthdr *header,
     
     if (packet_type != ETHERTYPE_IP)
         return;
+    
+    if (capture_file)
+        output_offline_update(header->ts);
     
     process_ip(pcap, ip, header->ts);
     

@@ -28,13 +28,23 @@
 #include <stdio.h>
 #include <time.h>
 
-static int output(char format[], unsigned long iterations),
+static int output(time_t current, char format[], unsigned long iterations),
     output_header(char header[], int verbatim);
+
+// Last output timeval for offline captures
+struct timeval last_output;
+
+// Options copy for the same thing
+static struct output_options *output_options;
+
+// Iterations
+unsigned long iterations;
 
 void *
 output_thread(void *arg) {
     struct output_options *options;
     struct timespec ts;
+    time_t current;
     unsigned long iterations;
     
     options = arg;
@@ -57,7 +67,8 @@ output_thread(void *arg) {
     {
         nanosleep(&ts, NULL);
         
-        output(options->format, iterations);
+        time(&current);
+        output(current, options->format, iterations);
         
     }
     
@@ -68,10 +79,66 @@ output_thread(void *arg) {
     
 }
 
+int
+output_offline_start(struct output_options *options) {
+    // TODO: Make common code with output_offline_start()
+    if (!check_format(options->format))
+        abort();
+    
+    if (options->show_header) {
+        if (options->header)
+            output_header(options->header, 1);
+        else
+            output_header(options->format, 0);
+        
+    }
+    
+    output_options = options;
+
+    iterations = 0;
+    
+    return 0;
+    
+}
+
+int
+output_offline_update(struct timeval tv) {
+    struct timeval next;
+    
+    // Set last output if it's at zero
+    if (!last_output.tv_sec)
+        last_output = tv;
+    
+    do {
+        next.tv_sec = last_output.tv_sec + output_options->interval;
+        next.tv_usec = last_output.tv_usec;
+/*        printf("Last output was %lu:%lu, next %lu:%lu. Packet is %lu:%lu\n",
+               last_output.tv_sec, last_output.tv_usec, next.tv_sec, next.tv_usec,
+               tv.tv_sec, tv.tv_usec);*/
+               
+    
+        if (tv.tv_sec > next.tv_sec ||
+                (tv.tv_sec == next.tv_sec && tv.tv_usec > next.tv_usec))
+        {
+            output(next.tv_sec, output_options->format, iterations);
+            last_output = next;
+            
+            iterations ++;
+            
+        }
+        else
+            break;
+        
+    }
+    while (1);
+    
+    return 0;
+        
+}
+
 static int
-output(char format[], unsigned long iterations) {
+output(time_t current, char format[], unsigned long iterations) {
     char *c;
-    time_t current = 0;
     
     struct stats_results *results;
     
@@ -114,13 +181,8 @@ output(char format[], unsigned long iterations) {
             // Timestamping
             else if (c[0] == 'I')
                 printf("%lu", iterations);
-            else if (c[0] == 't' || c[0] == 'T') {
-                if (!current)
-                    time(&current);
-                
+            else if (c[0] == 't' || c[0] == 'T')
                 printf("%lu", current - (c[0] == 't' ? timestamp : 0));
-                
-            }
             
             // Actual %
             else if (c[0] == '%')
