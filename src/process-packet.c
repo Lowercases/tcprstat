@@ -124,6 +124,10 @@ process_ip(pcap_t *dev, const struct ip *ip, struct timeval tv) {
         datalen = len - sizeof(struct ip) - tcp->doff * 4;
 #endif
 
+        // Capture only "data" packets, ignore TCP control
+        if (datalen == 0)
+            break;
+
         if (incoming) {
             lport = dport;
             rport = sport;
