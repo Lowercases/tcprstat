@@ -71,6 +71,50 @@ capture(void *arg) {
     
 }
 
+int
+offline_capture(FILE *fcapture) {
+    struct bpf_program bpf;
+    char errbuf[PCAP_ERRBUF_SIZE];
+    char filter[30];
+    int r;
+
+    pcap = pcap_fopen_offline(fcapture, errbuf);
+    if (!pcap) {
+        fprintf(stderr, "pcap: %s\n", errbuf);
+        return 1;
+        
+    }
+    
+    // Capture only TCP
+    if (port)
+        sprintf(filter, "tcp port %d", port);
+    else
+        sprintf(filter, "tcp");
+    
+    if (pcap_compile(pcap, &bpf, filter, 1, 0)) {
+        fprintf(stderr, "pcap: %s\n", pcap_geterr(pcap));
+        return 1;
+        
+    }
+    
+    if (pcap_setfilter(pcap, &bpf)) {
+        fprintf(stderr, "pcap: %s\n", pcap_geterr(pcap));
+        return 1;
+        
+    }
+    
+    // The -1 here stands for "infinity"
+    r = pcap_loop(pcap, -1, process_packet, (unsigned char *) pcap);
+    if (r == -1) {
+        fprintf(stderr, "pcap: %s\n", pcap_geterr(pcap));
+        return 1;
+        
+    }
+    
+    return 1;
+    
+}
+
 void
 endcapture(void) {
     if (pcap)

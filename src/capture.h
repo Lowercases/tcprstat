@@ -22,9 +22,11 @@
 #if !defined CAPTURE_H
 #define CAPTURE_H
 
-#include <pcap.h>
+#include <stdio.h>
 
 void *capture(void *);
 void endcapture(void);
+
+int offline_capture(FILE *);
 
 #endif
