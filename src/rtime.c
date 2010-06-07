@@ -40,6 +40,7 @@ struct option long_options[] = {
     { "help", no_argument, NULL, 'h' },
     { "version", no_argument, NULL, 'V' },
     
+    { "local", required_argument, NULL, 'l' },
     { "port", required_argument, NULL, 'p' },
     { "format", required_argument, NULL, 'f' },
     { "header", optional_argument, NULL, 's' },
@@ -51,7 +52,9 @@ struct option long_options[] = {
     { NULL, 0, NULL, '\0' }
 
 };
-char *short_options = "hVp:f:t:n:r:";
+char *short_options = "hVp:f:t:n:r:l:";
+
+int specified_addresses = 0;
 
 pthread_t capture_thread_id, output_thread_id;
 
@@ -103,6 +106,16 @@ main(int argc, char *argv[]) {
                 return EXIT_FAILURE;
                 
             }
+            break;
+            
+        case 'l':
+            specified_addresses = 1;
+            if (parse_addresses(optarg)) {
+                fprintf(stderr, "Error parsing local addresses\n");
+                return EXIT_FAILURE;
+                
+            }
+            
             break;
             
         case 'p':
@@ -180,7 +193,7 @@ main(int argc, char *argv[]) {
     sigaction(SIGINT, &sa, NULL);
     
     // Get local addresses
-    if (get_addresses() != 0)
+    if (!specified_addresses && get_addresses() != 0)
         return EXIT_FAILURE;
     
     // Operations timestamp

@@ -25,6 +25,7 @@
 #include <netinet/in.h>
 
 int get_addresses(void);
+int parse_addresses(char []);
 int free_addresses(void);
 
 int is_local_address(struct in_addr);

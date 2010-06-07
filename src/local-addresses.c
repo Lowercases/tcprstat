@@ -23,7 +23,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 struct address_list {
     struct in_addr in_addr;
@@ -84,6 +86,59 @@ get_addresses(void) {
     
     return 0;
 
+}
+
+int
+parse_addresses(char addresses[]) {
+    char *next, *comma;
+    struct address_list *address_list_curr;
+    
+    next = addresses;
+    address_list_curr = &address_list;
+    
+    while ((comma = strchr(next, ','))) {
+        char *current;
+        
+        current = malloc((comma - next) + 1);
+        if (!current)
+            abort();
+        
+        strncpy(current, next, (comma - next));
+        current[comma - next] = '\0';
+
+        address_list_curr->next = malloc(sizeof(struct address_list));
+        if (!address_list_curr->next)
+            abort();
+        
+        address_list_curr->next->next = NULL;
+        
+        if (!inet_aton(current, &address_list_curr->next->in_addr)) {
+            free(current);
+            return 1;
+            
+        }
+        
+        address_list_curr = address_list_curr->next;
+            
+        free(current);
+
+        next = comma + 1;
+        
+    }
+    
+    address_list_curr->next = malloc(sizeof(struct address_list));
+    if (!address_list_curr->next)
+        abort();
+    
+    address_list_curr->next->next = NULL;
+    
+    if (!inet_aton(next, &address_list_curr->next->in_addr))
+        return 1;
+    
+    address_list_curr = address_list_curr->next;
+            
+    return 0;
+    
 }
 
 int

@@ -1,5 +1,6 @@
 Development version
     * Offline captures from pcap savefiles
+    * Ability to specify which are the local addresses.
 
 Version 0.2.6
     * Implementation now uses a hash table for the stat sessions,
