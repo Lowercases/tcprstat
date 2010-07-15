@@ -34,7 +34,8 @@ capture(void *arg) {
     char filter[30];
     int r;
 
-    pcap = pcap_open_live("any", 140000, 0, 2000, errbuf);
+    // Second argument 0 stands for non-promiscuous mode
+    pcap = pcap_open_live("any", CAPTURE_LENGTH, 0, READ_TIMEOUT, errbuf);
     if (!pcap) {
         fprintf(stderr, "pcap: %s\n", errbuf);
         return NULL;

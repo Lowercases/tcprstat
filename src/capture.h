@@ -24,6 +24,9 @@
 
 #include <stdio.h>
 
+#define CAPTURE_LENGTH		65535
+#define READ_TIMEOUT		2000
+
 void *capture(void *);
 void endcapture(void);
 
