@@ -22,7 +22,7 @@
 #
 
 AC_PREREQ(2.61)
-AC_INIT([rtime], [0.3.0], [ignacio.nin@percona.com])
+AC_INIT([rtime], [0.3.0b], [ignacio.nin@percona.com])
 AM_INIT_AUTOMAKE([ ])
 AC_CONFIG_HEADER([config.h])
 

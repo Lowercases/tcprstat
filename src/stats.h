@@ -41,6 +41,7 @@ int free_results(struct stats_results *);
 unsigned stats_count(struct stats_results *r, int percentile);
 unsigned long stats_avg(struct stats_results *r, int percentile);
 unsigned long stats_sum(struct stats_results *r, int percentile);
+unsigned long stats_sqs(struct stats_results *r, int percentile);
 unsigned long stats_min(struct stats_results *r, int percentile);
 unsigned long stats_max(struct stats_results *r, int percentile);
 unsigned long stats_med(struct stats_results *r, int percentile);

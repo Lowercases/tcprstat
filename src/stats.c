@@ -346,6 +346,35 @@ stats_sum(struct stats_results *results, int percentile) {
 }
 
 unsigned long
+stats_sqs(struct stats_results *results, int percentile) {
+    unsigned long n;
+    unsigned long sqs = 0;
+    unsigned long i;
+    
+    if (!results->statscount)
+        return 0;
+
+    if (percentile == 0 || percentile == 100)
+        n = results->statscount;
+    else {
+        if (!results->sorted)
+            sort_results(results);
+        
+        n = (results->statscount * percentile ) / 100;
+        
+    }
+    
+    if (!n)
+        return 0;
+    
+    for (i = 0; i < n; i ++)
+        sqs += results->stats[i] * results->stats[i];
+    
+    return sqs;
+    
+}
+
+unsigned long
 stats_min(struct stats_results *results, int percentile) {
     if (!results->statscount)
         return 0;

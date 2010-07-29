@@ -167,6 +167,8 @@ output(time_t current, char format[], unsigned long iterations) {
                 printf("%lu", stats_avg(results, r));
             else if (c[0] == 's')
                 printf("%lu", stats_sum(results, r));
+            else if (c[0] == 'x')
+                printf("%lu", stats_sqs(results, r));
             else if (c[0] == 'm')
                 printf("%lu", stats_min(results, r));
             else if (c[0] == 'M')
@@ -256,6 +258,11 @@ output_header(char header[], int verbatim) {
                     printf("%d_sum", r);
                 else
                     fputs("sum", stdout);
+            else if (c[0] == 'x')
+                if (r != 100)
+                    printf("%d_sqs", r);
+                else
+                    fputs("sqs", stdout);
             else if (c[0] == 'm')
                 if (r != 100)
                     printf("%d_min", r);
@@ -356,6 +363,7 @@ check_format(char format[]) {
             case 'n':
             case 'a':
             case 's':
+            case 'x':
             case 'r':
             case 'I':
             case 't':
