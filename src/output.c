@@ -1,5 +1,5 @@
  /**
- *   rtime -- Extract stats about TCP response times
+ *   tcprstat -- Extract stats about TCP response times
  *   Copyright (C) 2010  Ignacio Nin
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@
 #include "output.h"
 #include "stats.h"
 #include "capture.h"
-#include "rtime.h"
+#include "tcprstat.h"
 
 #include <stdlib.h>
 #include <stdio.h>

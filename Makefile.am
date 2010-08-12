@@ -1,5 +1,5 @@
 #
-#   rtime -- Extract stats about TCP response times
+#   tcprstat -- Extract stats about TCP response times
 #   Copyright (C) 2010  Ignacio Nin
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -24,4 +24,4 @@ else
 SUBDIRS = src
 endif
 
-CLEANFILES = rtime-*.tar.gz
+CLEANFILES = tcprstat-*.tar.gz

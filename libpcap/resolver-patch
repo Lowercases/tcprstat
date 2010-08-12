@@ -1,5 +1,5 @@
 #
-# rtime -- Extract stats about TCP response times
+# tcprstat -- Extract stats about TCP response times
 # Copyright (C) 2010 Ignacio Nin
 #
 # This program is free software; you can redistribute it and/or modify
@@ -21,13 +21,13 @@
 #
 # RATIONALE
 #
-# This patch is for the successful linking of rtime-static, the
-# statically-linked version of rtime.
+# This patch is for the successful linking of tcprstat-static, the
+# statically-linked version of tcprstat.
 #
 # gethostbyname(3) and friends, when linked statically, require at runtime the
 # C library where they were compiled. We actually don't use names in this
 # application for now, so it's safe (given the advantages of statically linking
-# rtime) to just return an error.
+# tcprstat) to just return an error.
 #
 
 diff -Naur libpcap-1.1.1/nametoaddr.c libpcap-1.1.1-patch/nametoaddr.c

@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 #
-#   rtime -- Extract stats about TCP response times
+#   tcprstat -- Extract stats about TCP response times
 #   Copyright (C) 2010  Ignacio Nin
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@
 #
 
 AC_PREREQ(2.61)
-AC_INIT([rtime], [0.3.0b], [ignacio.nin@percona.com])
+AC_INIT([tcprstat], [0.3.1], [ignacio.nin@percona.com])
 AM_INIT_AUTOMAKE([ ])
 AC_CONFIG_HEADER([config.h])
 
