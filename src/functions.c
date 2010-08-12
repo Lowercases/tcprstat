@@ -46,6 +46,7 @@ char *usage_msg =
     "\t                         %%n - Response time count\n"
     "\t                         %%a - Response time media in microseconds\n"
     "\t                         %%s - Response time sum\n"
+    "\t                         %%x - Response time squares sum\n"
     "\t                         %%m - Minimum value\n"
     "\t                         %%M - Maximum value\n"
     "\t                         %%h - Median value\n"

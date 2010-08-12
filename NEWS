@@ -1,3 +1,6 @@
+Version 0.3.0b
+    * %x shows the sum of response time squares
+
 Version 0.3.0
     * Offline captures from pcap savefiles
     * Ability to specify which are the local addresses.
