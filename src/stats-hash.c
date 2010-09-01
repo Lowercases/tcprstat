@@ -290,7 +290,7 @@ hash_fun(uint32_t laddr, uint32_t raddr, uint16_t lport, uint16_t rport) {
     ret = ((uint64_t) laddr << 32) | raddr;
     ret ^= ((uint64_t) lport << 48) | ((uint64_t) rport << 32) |
             ((uint64_t) lport << 16) | rport;
-#elif SIZEOF_USIGNED_LONG == 4
+#elif SIZEOF_UNSIGNED_LONG == 4
     ret = laddr ^ raddr;
     ret ^= (lport << 16) | rport;
 #else
