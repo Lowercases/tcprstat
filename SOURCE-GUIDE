@@ -1,0 +1,138 @@
+The rtime(8) source guide
+
+  Please refer to README for an introduction on how rtime(8) works.
+
+  The source code is organized as a standard autoconf-managed program.
+  In the top source directory live files for managing the build process, and
+documentation files, like README, AUTHORS, this guide, etc..
+  There are two main subdirectories, libpcap/, which holds the libpcap source
+code (this is external code) and the appropiate patches for building it, and
+src/, where rtime(8)'s code proper lives.
+
+  BUILD PROCESS FILES (TOP SOURCE DIRECTORY)
+
+  The build process is managed by bootstrap, which is the script which executes
+autoconf, automake and friends. This is the first script to run when you've just
+downloaded the pristine code (you shouldn't run it if you've downladed a
+source tarball), and you should run it only once. The most important side effect
+of executing bootstrap is to generate the configure script.
+
+  The configure.ac script contains the configure stem. It's used by autoconf(1)
+to generate the configure script.
+
+  The Makefile.am files (in every directory of the source) control how the
+program is built -- dependencies, build products, etc.. The only important
+specimen is the one located in the src/ subdirectory, the others are almost
+trivial.
+
+  The generated configure script and Makefiles behave just like any other
+autotools-generated configure and Makefile.
+
+  THE RTIME SOURCE
+
+  As said, the rtime(8) source proper lives in the src/ subdirectory.
+It consists of fairly standard C code. The code is threaded, and uses pthread so
+this would be a requirement besides libpcap (the only one).
+  Most of the code is organized as modules with one module file and one header
+file.
+
+  The rtime.c module is where the main() function lives and should be a good
+place to start
+
+  + rtime.c
+
+  main() parses rtime(8)'s arguments using getopt_long(3) and then proceeds to
+setting up the environment: sets the signal capturing function for TERM and INT,
+initializes the program stats by calling init_stats(), and calls get_addresses()
+from local-addresses.c.
+
+  After environment is set (and provided nothing failed) it fires the capturing
+thread (its main function is capture()) and the output thread (main function
+output_thread()).
+
+  After these threads have been fired it proceeds to pthread_join(3) on the
+capture thread, this is, waits for the capture thread to finish. This is where
+an rtime(8) program (actually its main function ;) passes 99% of its time --
+waiting for the capture thread to finish. So in its normal mode of operation
+rtime(8) uses three [two of them fairly inactive] threads in the main module,
+plus an additional thread fired by init_stats().
+
+  Once the capture thread does finish, it pthread_join(3)s the output thread and
+proceeds to deinit all structures and die.
+
+  rtime.c also contains the function that captures SIGINT and SIGTERM,
+terminate(). This is the normal mode of termination for an infinity-running
+rtime(8) session -- waiting for the user to kill it. This function just calls
+endcapture(), which in turn causes the capturing thread to terminate.
+
+  rtime.c exports its environment via rtime.h. Parameters passed to the program
+are broadcasted via inclusion of rtime.h. Yeah, this is how Singleton looks in
+non-fancy non-OOP.
+
+  + local-addresses.c
+
+  The purpose of local-addresses.c is to determine (prior to starting a
+capturing session) which IP addresses are local to the machine in which we
+operate.
+
+  The need for knowing which interfaces are local is fundamental for determining
+if a packet is inbound or outbound. Unfortunately, a libpcap-captured package
+doesn't indicate this, so we know whether it comes or goes by comparing its
+source address to the list that local-addresses.c creates.
+
+  Alternatively, we can specify to rtime(8) which the local addresses are, and
+in this case this module works only as a container for the list. We don't want
+to tell rtime(8) which the local addresses are -- getting them via libpcap is
+much more secure. However, in case we are measuring from a capture file which we
+brought from another machine, this is the only way for rtime(8) to correctly use
+the local addresses.
+
+  The implementation of the module is fairly opaque. get_addresses() gets and
+saves the local addresses via libpcap, parse_addresses() parses its argument
+and extracts the addresses from there, free_addresses() frees the structures,
+and is_local_address() verifies if its argument is in the local address list.
+
+  + functions.c
+
+  This module holds the help and usage messages.
+
+  + capture.c
+
+  capture.c is the wrapper around libpcap. It implements capture(), the main
+function of the capturing thread.
+
+  capture() basically has three steps. First it calls pcap_open_live(3), which
+opens the any interface for capturing and returns a pcap handle for work.
+Second, it creates a rule for the pcap handle to only capture TCP traffic. In
+case a port was specified for capturing (to rtime(8)), it adds it to the filter.
+And third, calls pcal_loop(3) for starting the live capture.
+
+  In case this is a dead capture, offline_capture() is the main function. It
+does the same but using pcap_open_offline(3) instead of pcap_open_live(3).
+
+  In both cases the processing function for packets is process_packet().
+
+  endcapture() is just a wrapper around pcap_breakloop(3).
+
+  + process_packet.c
+
+  This module implements process_packet(). This function decodes the ethernet,
+IP and TCP headers from the packet and calls inbound() or outbound() depending
+on the packet type, with the needed info for accounting it.
+
+  + stats.c
+
+  stats.c is the core of rtime(8). It holds the stats which produce the results.
+
+  The stats are organized as a hash table. When an incoming packet comes, its
+remote and local port and address are recorded in the hash table (these are the
+hash key), together with its timestamp. When an outgoing packet leaves which
+matches remote and local port and address we extract the timestamp from the hash
+and save the timestamp difference in an results array.
+
+  inbound() and outbound(), which live in this module, implement this behavior.
+
+  init_stats() initializes the hash, and the results array. It also fires a
+cleaning thread: if there's old (for example 10 seconds) info in the hash, then
+the cleaning thread takes it out. The cleaning thread waits for a period of
+times, cleans, and waits again. free_stats() destroys these structures.
